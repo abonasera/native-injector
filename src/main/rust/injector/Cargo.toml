@@ -1,0 +1,12 @@
+[package]
+name = "injector"
+version = "0.0.1"
+edition = "2021"
+authors = ["Andrew Bonasera"]
+
+[dependencies]
+jni = "0.17.0"
+winapi = {version = "0.3.9", features = ["processthreadsapi", "memoryapi", "winuser", "libloaderapi", "handleapi", "synchapi"] }
+
+[lib]
+crate_type = ["cdylib"]

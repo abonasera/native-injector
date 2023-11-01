@@ -1,0 +1,50 @@
+apply plugin: 'java'
+
+group 'me.bonasera'
+version '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+jar.manifest.attributes(
+        'Main-Class': 'me.bonasera.nativeinjector.Main'
+)
+
+// Compile the injector
+task compileInjector {
+    // Build the binary
+    exec {
+        workingDir 'src/main/rust/injector'
+        commandLine 'cargo', 'build', '--release'
+    }
+    // Copy the binary into resources
+    copy {
+        from 'src/main/rust/injector/target/release'
+        include 'injector.dll'
+        into 'src/main/resources'
+    }
+}
+
+// Compile the payload
+task compilePayload {
+    // Build the binary
+    exec {
+        workingDir 'src/main/rust/payload'
+        commandLine 'cargo', 'build', '--release'
+    }
+    // Copy the binary into resources
+    copy {
+        from 'src/main/rust/payload/target/release'
+        include 'payload.dll'
+        into 'src/main/resources'
+    }
+}
+
+build.dependsOn compileInjector, compilePayload
+
+processResources.dependsOn compileInjector, compilePayload
